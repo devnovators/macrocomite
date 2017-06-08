@@ -51,8 +51,11 @@
                     <iron-icon icon="icons:record-voice-over"></iron-icon> Discuss 
                   </paper-button>{{getKudosUser(card.id,'calidad')}}
                   <paper-button id="id_[[card.id]]_innovador" toggles on-click="valorarInnovador" class="innovador">
-                    <iron-icon icon="icons:done"></iron-icon> I agree 
+                    <iron-icon icon="icons:thumb-up"></iron-icon> Approve
                   </paper-button>{{getKudosUser(card.id,'innovador')}}
+                  <paper-button id="id_[[card.id]]_rentable" toggles on-click="valorarRentable" class="rentable">
+                    <iron-icon icon="icons:thumb-down"></iron-icon> Reject
+                  </paper-button>{{getKudosUser(card.id,'rentable')}}
                 </div>
                 <div class="valoracion-star">
                   <star-rating stars="3" id="star_{{card.id}}" on-click="rankear" ></star-rating>
@@ -240,6 +243,23 @@
           } else {
             firebase.database().ref('eventos/' + this.activeEvent +'/users').child(this.userEmail)
               .child(projectId).child('kudos').child('innovador').remove();
+          }
+        },
+        valorarRentable:function(e) {
+          var buttonData = e.model['__data__'];
+          var projectId = buttonData.card.id;
+          var buttonActive = this.$$('#id_' + projectId + '_rentable').active;
+          var buttonPressed = 1;
+          if (!buttonActive) { buttonPressed = -1; }
+          var refControl = firebase.database().ref('eventos/' + this.activeEvent +'/users').child(this.userEmail);
+          if (buttonPressed > 0) {
+            var updates = {};
+            updates["/" + projectId + "/kudos/rentable"] = true;
+            updates["/profile"] = { name: this.userName, picture: this.userPicture };
+            refControl.update(updates);
+          } else {
+            firebase.database().ref('eventos/' + this.activeEvent +'/users').child(this.userEmail)
+              .child(projectId).child('kudos').child('rentable').remove();
           }
         },
         getKudosUser:function(idCard,idKudo){
