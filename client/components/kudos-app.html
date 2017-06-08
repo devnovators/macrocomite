@@ -143,7 +143,7 @@
                         parent.set('userPicture', account.photoURL);
                         parent.set('logged', true);
                         //firebase.database().ref("eventoActivo").once("value").then(function(snapshot) {
-                            var activo = 'ppm'; //console.log('activo:'+activo);
+                            var activo = 'ppm';
                             parent.set('activeEvent', activo); //console.log('parent.activeEvent:', parent.activeEvent);
                             parent.$.cards.activeEvent = activo;
                             parent.$.stats.activeEvent = activo;
