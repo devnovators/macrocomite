@@ -141,11 +141,11 @@
       if (average >= 3) { tier = 'TIER1'; }
       else if (average >=2 ) { tier = 'TIER2' }
       else { tier = 'TIER3'; }
-      var _stars='<div><div class="userSection" style="vertical-align:top;"><b>Valoración</b> </div><div class="userSection2">TIER1 (3 estrellas) - ' + threeStar  + ' usuarios' + '<br />TIER2 (2 estrellas) - ' + twoStar + ' usuarios<br />TIER3 (1 estrella ) - ' + oneStar + ' usuarios</div></div>';
+      //var _stars='<div><div class="userSection" style="vertical-align:top;"><b>Valoración</b> </div><div class="userSection2">TIER1 (3 estrellas) - ' + threeStar  + ' usuarios' + '<br />TIER2 (2 estrellas) - ' + twoStar + ' usuarios<br />TIER3 (1 estrella ) - ' + oneStar + ' usuarios</div></div>';
+      var _stars = '<div><div class="userSection" style="vertical-align:top;"><b>Valoración</b> </div><div class="userSection2">' + stars  + ' estrellas' + '</div></div>';
       var _kudos='';
-      _kudos = '<div><div class="userSection">Discuss: </div><div class="userSection2">'+ granesfuerzo + ' usuarios</div></div>' ;
-      _kudos = _kudos + '<div><div class="userSection">Approve: </div><div class="userSection2">' + esinnovador  + ' usuarios</div></div>' ;
-      _kudos = _kudos + '<div><div class="userSection">Reject: </div><div class="userSection2">'+ loentiendo + ' usuarios</div></div>' ;
+      _kudos = '<div><div class="userSection">Gol Cliente: </div><div class="userSection2">'+ granesfuerzo + ' usuarios</div></div>' ;
+      _kudos = _kudos + '<div><div class="userSection">Gol BBVA: </div><div class="userSection2">' + esinnovador  + ' usuarios</div></div>' ;
       self.$$('#st_' +idCard).innerHTML=_stars;
       self.$$('#kd_' +idCard).innerHTML=_kudos;
       self.$$('#fb_' +idCard).innerHTML=listFeedback+'</ul>';
