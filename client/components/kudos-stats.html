@@ -81,7 +81,7 @@
       sortedCards   : { type: Array, notify:true }
     },
     getCards:function(){
-      var ref = firebase.database().ref("eventos/" + this.activeEvent + "/blocks");
+      var ref = firebase.database().ref(this.activeEvent + "/blocks");
       var self = this;
       self.cards = [];
       ref.once("value").then(function(snapshot) {
@@ -158,7 +158,7 @@
     },
     getRanking:function() {
       var self=this;
-      firebase.database().ref('eventos/' + this.activeEvent +'/users').once('value',function(snapshot) {
+      firebase.database().ref(this.activeEvent +'/users').once('value',function(snapshot) {
         var users = snapshot.val();
         self.set('listUsers',users);
         var numUsers=0;
