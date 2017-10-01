@@ -73,7 +73,7 @@
             Bienvenid@ a Kudos, para poder dejar tu feedback debes identificarte:<br>
             <paper-button class="green" raised on-click="signInWithGoogle">
                 <iron-icon icon="perm-identity"></iron-icon>
-                Ingresar con mi cuenta Google
+                Ingresar con mi cuenta Google (@bbva.com)
             </paper-button>
         </div>
         <div hidden$="{{!logged}}" width="100%" style="text-align:center;">
@@ -119,7 +119,6 @@
                 //console.log('_userEmailChanged newVal:'+newVal+' oldVal:'+oldVal);
             },
             ready:function() {
-                //this.eventName = 'Macrocomité 4T';
                 this.addEventListener('showChatbot', this.showChatbot);
                 firebase.initializeApp({
                     apiKey: "AIzaSyBiBdm3MheV4sN7lfk0WLoVDtXXxHxbbvk",
@@ -147,15 +146,24 @@
                             parent.$.cards.activeEvent = activeEvent;
                             parent.$.stats.activeEvent = activeEvent;
                             parent.$.about.activeEvent = activeEvent;
-                            parent.$.cards.getKudos();
-                            parent.$.cards.getBlocks();
                             parent.$.about.getKudos();
                             parent.$.about.getMember();
-                            parent.showCards();
                             firebase.database().ref(activeEvent).once("value").then(function(snapshot) {
-                                var nombre = snapshot.val().name; //console.log('nombre:'+nombre);
-                                parent.set('eventName', nombre); //console.log('parent.eventName:', parent.eventName);
+                                parent.set('eventName', snapshot.val().parameters.name); 
+                                if (snapshot.val().parameters.withKudos=='true'){parent.$.cards.withKudos=true;}
+                                parent.$.cards.numStars=snapshot.val().parameters.numStars;
+                                parent.$.cards.getKudos();
+                                parent.$.cards.getBlocks();
+                                parent.showCards();
                             });
+                            var updates = {};
+                            var userData = {
+                                name: parent.userName,
+                                picture: parent.userPicture
+                            };
+                            var ref = firebase.database().ref(activeEvent + "/users/" + parent.$.cards.userEmail  );
+                            updates["/profile"] = userData;
+                            ref.update(updates);
                         });
                     }
                 });
