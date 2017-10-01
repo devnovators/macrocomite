@@ -26,12 +26,12 @@
                     <div class="div_middle">
                       <div>{{card.description}}</div>
                       <div>[[card.linkLabel]]&nbsp;&nbsp;<a href="[[card.linkValue]]" target="_blank">[[card.linkValue]]</a></div>
-                      </div>
-                    <div class="div_feedback" style="vertical-align:top;">
-                      <paper-button style="margin-top: 3px;" class="rate-icon bot" id="{{card.id}}" data='{{card}}' on-click="openBot" style$="display:[[card.withChat]]">
+                    </div>
+                    <div class="div_feedback">
+                      <paper-button class="rate-icon bot" id="{{card.id}}" data='{{card}}' on-click="openBot" style$="display:[[card.withChat]]">
                         Chatbot<iron-icon icon="communication:live-help" data='{{card}}'></iron-icon>
                       </paper-button>
-                      <paper-button style="margin-top: 3px;" class="rate-icon feeback" id="{{card.id}}" data='{{card}}' on-click="openModal">
+                      <paper-button class="rate-icon feeback" id="{{card.id}}" data='{{card}}' on-click="openModal">
                         Feedback <iron-icon icon="announcement" data='{{card}}'></iron-icon>
                       </paper-button>
                     </div>
@@ -45,18 +45,10 @@
                       <iron-icon icon="{{kudo.icon}}"></iron-icon> {{kudo.title}}
                     </paper-button>
                     <paper-tooltip for="id_{{card.id}}_{{kudo.id}}" position="top" style="max-width:100px;">{{kudo.title}}<br>{{kudo.description}}</paper-tooltip>
-                  </template>
-                  <paper-button id="id_[[card.id]]_calidad" toggles on-click="valorarCalidad" class="calidad">
-                    <iron-icon icon="icons:record-voice-over"></iron-icon> Discuss 
-                  </paper-button>{{getKudosUser(card.id,'calidad')}}
-                  <paper-button id="id_[[card.id]]_innovador" toggles on-click="valorarInnovador" class="innovador">
-                    <iron-icon icon="icons:done"></iron-icon> I agree 
-                  </paper-button>{{getKudosUser(card.id,'innovador')}}
-                  </div>-->
+                  </template>-->
                   <div class="valoracion-star">
                     <star-rating stars="5" id="star_{{card.id}}" on-click="rankear"></star-rating>
                     {{getRatingCardUser(card.id)}}
-                    <!--<div id$="star_{{card.id}}"></div>-->
                   </div>
                 </div>
               </div>
@@ -97,7 +89,7 @@
         },
         getKudos:function(){
             var self = this;
-            firebase.database().ref('eventos/' + this.activeEvent + '/kudos').once('value').then(function(snapshot) {
+            firebase.database().ref(this.activeEvent + '/kudos').once('value').then(function(snapshot) {
               self.kudos = [];
               snapshot.forEach(function(child) {
                 var kudo = child.val();
@@ -107,7 +99,7 @@
             });
           },
         getBlocks:function(){
-          var ref = firebase.database().ref("eventos/" + this.activeEvent + "/blocks");
+          var ref = firebase.database().ref(this.activeEvent + "/blocks");
           var self = this;
           ref.once("value").then(function(snapshot) {
             self.blocks = [];
@@ -152,7 +144,7 @@
           this.$.btnFeedback.data=card.id;
           this.$.titleFeedback.innerHTML="Quick feedback for:<br>" + card.title;
           this.$.feedback.open();
-          var ref = firebase.database().ref("eventos/" + this.activeEvent + "/users/" + this.userEmail+ "/"+ card.id + "/comments");
+          var ref = firebase.database().ref(this.activeEvent + "/users/" + this.userEmail+ "/"+ card.id + "/comments");
           ref.once('value').then(function(snapshot) {
             var msg="";
             if(snapshot.val()!=null){
@@ -166,16 +158,14 @@
           var idCard=this.$.btnFeedback.data;
           var msg=this.$.txtFeedback.value;
           if(msg.trim().length==0){this.$.feedback.close();return;}
-          var ref = db.ref("eventos/" + this.activeEvent + "/users/" + this.userEmail);
+          var ref = db.ref(this.activeEvent + "/users/" + this.userEmail);
           var postData = {
-            //author: this.userUid,
             message: msg
           };
           var userData = {
             name: this.userName,
             picture: this.userPicture
           };
-          //var newPostKey = ref.child('comments').push().key;
           var updates = {};
 
           updates["/" +idCard + "/comments"] = postData;
@@ -194,7 +184,7 @@
           if (!idBtnKudo.active){ //botón inactivo
             voto = -1;
           }
-          var refControl = firebase.database().ref('eventos/' + this.activeEvent +'/users').child(this.userEmail);
+          var refControl = firebase.database().ref(this.activeEvent +'/users').child(this.userEmail);
           if(voto > 0) {
             var updates = {};
             updates["/" + idCard + "/kudos/" + idKudo] = true;
@@ -205,41 +195,7 @@
             updates["/profile"] = userData;
             refControl.update(updates);
           } else {
-            firebase.database().ref('eventos/' + this.activeEvent +'/users').child(this.userEmail).child(idCard).child('kudos').child(idKudo).remove();
-          }
-        },
-        valorarCalidad:function(e) {
-          var buttonData = e.model['__data__'];
-          var projectId = buttonData.card.id;
-          var buttonActive = this.$$('#id_' + projectId + '_calidad').active;
-          var buttonPressed = 1;
-          if (!buttonActive) { buttonPressed = -1; }
-          var refControl = firebase.database().ref('eventos/' + this.activeEvent +'/users').child(this.userEmail);
-          if (buttonPressed > 0) {
-            var updates = {};
-            updates["/" + projectId + "/kudos/calidad"] = true;
-            updates["/profile"] = { name: this.userName, picture: this.userPicture };
-            refControl.update(updates);
-          } else {
-            firebase.database().ref('eventos/' + this.activeEvent +'/users').child(this.userEmail)
-              .child(projectId).child('kudos').child('calidad').remove();
-          }
-        },
-        valorarInnovador:function(e) {
-          var buttonData = e.model['__data__'];
-          var projectId = buttonData.card.id;
-          var buttonActive = this.$$('#id_' + projectId + '_innovador').active;
-          var buttonPressed = 1;
-          if (!buttonActive) { buttonPressed = -1; }
-          var refControl = firebase.database().ref('eventos/' + this.activeEvent +'/users').child(this.userEmail);
-          if (buttonPressed > 0) {
-            var updates = {};
-            updates["/" + projectId + "/kudos/innovador"] = true;
-            updates["/profile"] = { name: this.userName, picture: this.userPicture };
-            refControl.update(updates);
-          } else {
-            firebase.database().ref('eventos/' + this.activeEvent +'/users').child(this.userEmail)
-              .child(projectId).child('kudos').child('innovador').remove();
+            firebase.database().ref(this.activeEvent +'/users').child(this.userEmail).child(idCard).child('kudos').child(idKudo).remove();
           }
         },
         getKudosUser:function(idCard,idKudo){
@@ -253,7 +209,7 @@
         },
         getRatingCardUser:function(idCard){
           self=this;
-          var ref = firebase.database().ref("eventos/" + this.activeEvent + "/users/" + this.userEmail + "/" + idCard + "/rating");
+          var ref = firebase.database().ref(this.activeEvent + "/users/" + this.userEmail + "/" + idCard + "/rating");
           ref.once('value').then(function(snapshot) {
             var numStars=0;
             if(snapshot.val()!=null){
@@ -261,14 +217,13 @@
               self.stars=numStars;
             }
             self.$$('#star_' +idCard).rate=numStars;
-            //self.$$('#star_' +idCard).innerHTML = numStars + ' stars';
           });
         },
         rankear:function(e) {
           var data = e.model['__data__'];
           var idCard = data.card.id;
           var ratingCard = this.$$('#star_' + idCard).rate;
-          var ref = firebase.database().ref("eventos/" + this.activeEvent + "/users/" + this.userEmail  );
+          var ref = firebase.database().ref(this.activeEvent + "/users/" + this.userEmail  );
           var updates = {};
           updates["/" + idCard + "/rating"] = ratingCard;
           var userData = {

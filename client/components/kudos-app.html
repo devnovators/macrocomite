@@ -138,21 +138,21 @@
                         parent.$.cards.userName = account.displayName;
                         parent.$.chatbot.userFirstName = account.displayName.split(' ')[0];
                         parent.$.chatbot.userEmail = account.email.toString().replace(/[@.]/g,'_');
-                        //console.log("account.displayName => " + account.displayName);
                         parent.set('userName', account.displayName);
                         parent.set('userPicture', account.photoURL);
                         parent.set('logged', true);
-                        firebase.database().ref("eventoActivo").once("value").then(function(snapshot) {
-                            var activo = snapshot.val(); //console.log('activo:'+activo);
-                            parent.set('activeEvent', activo); //console.log('parent.activeEvent:', parent.activeEvent);
-                            parent.$.cards.activeEvent = activo;
-                            parent.$.stats.activeEvent = activo;
+                        firebase.database().ref("activeEvent").once("value").then(function(snapshot) {
+                            var activeEvent = 'events/' + snapshot.val(); //console.log('activo:'+activo);
+                            parent.set('activeEvent', activeEvent); //console.log('parent.activeEvent:', parent.activeEvent);
+                            parent.$.cards.activeEvent = activeEvent;
+                            parent.$.stats.activeEvent = activeEvent;
+                            parent.$.about.activeEvent = activeEvent;
                             parent.$.cards.getKudos();
                             parent.$.cards.getBlocks();
                             parent.$.about.getKudos();
                             parent.$.about.getMember();
                             parent.showCards();
-                            firebase.database().ref("/eventos/"+activo).once("value").then(function(snapshot) {
+                            firebase.database().ref(activeEvent).once("value").then(function(snapshot) {
                                 var nombre = snapshot.val().name; //console.log('nombre:'+nombre);
                                 parent.set('eventName', nombre); //console.log('parent.eventName:', parent.eventName);
                             });
@@ -164,13 +164,8 @@
                 if (!firebase.auth().currentUser) {
                     var provider = new firebase.auth.GoogleAuthProvider();
                     var parent = this;
-                    //firebase.auth().signInWithPopup(provider).then(function(result) {
-                    //    parent.set('logged', true);
-                    //    parent.showCards();
                     firebase.auth().signInWithRedirect(provider);
                     firebase.auth().getRedirectResult().then(function(result) {
-                      //if (result.credential) { var token = result.credential.accessToken; }
-                      //var user = result.user;
                       parent.set('logged', true);
                       parent.showCards();
                     }).catch(function(error) { //error.code //error.message //error.credential
@@ -200,7 +195,6 @@
                     this.$.chatbot.style.display = "none";
                     this.$.stats.getCards();
                     this.$.stats.getRanking();
-
                 }
             },
             showAbout:function() {

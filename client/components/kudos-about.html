@@ -74,10 +74,10 @@
           notify: true,
           value: "¿Qué kudos están disponibles?"
       },
-      pathEventos:{
+      activeEvent:{
           type:String,
           notify: true,
-          value: "/eventos/macro20171"
+          value: ""
       },
       kudos: {
           type: Array,
@@ -111,7 +111,7 @@
     },
     getKudos: function(){
         var about = this;
-        var pathKudos = this.pathEventos+"/kudos";
+        var pathKudos = this.activeEvent+"/kudos";
         about.kudos = [];
         firebase.database().ref(pathKudos).once('value').then(function(listado) {
           listado.forEach(function(child) {
@@ -127,7 +127,7 @@
     getMember: function(){
         var about = this;
         about.members = [];
-        var pathDevs = this.pathEventos+"/devs";
+        var pathDevs = this.activeEvent+"/devs";
         firebase.database().ref(pathDevs).once('value').then(function(listado) {
           listado.forEach(function(child) {
             var member = child.val();
