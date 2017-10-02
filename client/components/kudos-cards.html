@@ -43,16 +43,16 @@
                 <div class="card-actions kudos-button">
                   <template is="dom-if" if="{{withKudos}}">
                     <template id="tmtKudo" is="dom-repeat" items="{{kudos}}" as="kudo">
-                      {{getKudosUser(card.id,kudo.id)}}
-                      <paper-button class$="kudo [[kudo.id]]" toggles  id="id_{{card.id}}_{{kudo.id}}" on-click="valorar">
+                      {{getKudosUser(card.block,card.id,kudo.id)}}
+                      <paper-button class$="kudo [[kudo.id]]" toggles  id="id_{{card.id}}_{{kudo.id}}" on-click="_assess">
                         <iron-icon icon="{{kudo.icon}}"></iron-icon> {{kudo.title}}
                       </paper-button>
                       <paper-tooltip for="id_{{card.id}}_{{kudo.id}}" position="top" style="max-width:100px;">{{kudo.title}}<br>{{kudo.description}}</paper-tooltip>
                     </template>
                   </template>
                   <div class="valoracion-star">
-                    <star-rating stars="{{numStars}}" id="star_{{card.id}}" on-click="rankear"></star-rating>
-                    {{getRatingCardUser(card.id)}}
+                    <star-rating stars="{{numStars}}" id="star_{{card.id}}" on-click="_putStars"></star-rating>
+                    {{getRatingCardUser(card.block,card.id)}}
                   </div>
                 </div>
               </div>
@@ -109,6 +109,7 @@
             self.blocks = [];
             snapshot.forEach(function(child) {
               var block = child.val();
+              block.id  = child.key;
               self.push('blocks', block);
             });
           });
@@ -132,6 +133,7 @@
             newCard.diferencias     =block.cards[card].parameters.diferencias;
             newCard.limitaciones    =block.cards[card].parameters.limitaciones;
             newCard.marketing       =block.cards[card].parameters.marketing;
+            newCard.block           =block.id;
             self.push('cards', newCard);
           }
           return this.cards;
@@ -145,10 +147,10 @@
           var card = btnCard.data;
           var self=this;
           this.$.txtFeedback.value="";
-          this.$.btnFeedback.data=card.id;
+          this.$.btnFeedback.data=card;
           this.$.titleFeedback.innerHTML="Quick feedback for:<br>" + card.title;
           this.$.feedback.open();
-          var ref = firebase.database().ref(this.activeEvent + "/users/" + this.userEmail+ "/"+ card.id + "/comments");
+          var ref = firebase.database().ref(this.activeEvent + "/users/" + this.userEmail+ "/feedback/"+ card.block +"/" + card.id + "/comment");
           ref.once('value').then(function(snapshot) {
             var msg="";
             if(snapshot.val()!=null){
@@ -159,33 +161,32 @@
         },
         sendFeedback:function(){
           var db = firebase.database();
-          var idCard=this.$.btnFeedback.data;
+          var card=this.$.btnFeedback.data;
           var msg=this.$.txtFeedback.value;
           if(msg.trim().length==0){this.$.feedback.close();return;}
-          var ref = db.ref(this.activeEvent + "/users/" + this.userEmail);
+          var ref = db.ref(this.activeEvent + "/users/" + this.userEmail + "/feedback");
           var postData = {
             message: msg
           };
           var updates = {};
-
-          updates["/" +idCard + "/comments"] = postData;
+          updates["/"+ card.block + "/" + card.id + "/comment"] = postData;
           ref.update(updates);
           this.$.txtFeedback.value="";
           this.$.feedback.close();
           this.$.toastAlert.open();
-        },
-        getKudosUser:function(idCard,idKudo){
+        },    
+        getKudosUser:function(idBlock,idCard,idKudo){
           self=this;
-          var ref = firebase.database().ref(this.activeEvent + "/users/" + this.userEmail + "/" + idCard + "/kudos/" + idKudo);
+          var ref = firebase.database().ref(this.activeEvent + "/users/" + this.userEmail + "/feedback/"+ idBlock +"/" + idCard + "/kudos/" + idKudo);
           ref.once('value').then(function(snapshot) {
             if(snapshot.val()!=null){
                 self.$$('#id_' +idCard +'_' +idKudo).active=snapshot.val();
             }
           });
         },
-        getRatingCardUser:function(idCard){
+        getRatingCardUser:function(idBlock,idCard){
           self=this;
-          var ref = firebase.database().ref(this.activeEvent + "/users/" + this.userEmail + "/" + idCard + "/rating");
+          var ref = firebase.database().ref(this.activeEvent + "/users/" + this.userEmail + "/feedback/"+ idBlock + "/" + idCard + "/rating");
           ref.once('value').then(function(snapshot) {
             var numStars=0;
             if(snapshot.val()!=null){
@@ -195,31 +196,33 @@
             self.$$('#star_' +idCard).rate=numStars;
           });
         },
-        valorar:function(e) {
+        _assess:function(e) {
           var kudoSeleccionado = e.model['__data__'];
           var idKudo = kudoSeleccionado.kudo.id;
           var idCard = kudoSeleccionado.card.id;
+          var idBlock = kudoSeleccionado.card.block;
           var idBtnKudo=this.$$('#id_' +idCard +'_' +idKudo);
           var voto = 1;
           if (!idBtnKudo.active){ //botón inactivo
             voto = -1;
           }
-          var refControl = firebase.database().ref(this.activeEvent +'/users').child(this.userEmail);
+          var refControl = firebase.database().ref(this.activeEvent +'/users').child(this.userEmail+"/feedback");
           if(voto > 0) {
             var updates = {};
-            updates["/" + idCard + "/kudos/" + idKudo] = true;
+            updates["/" + idBlock + "/" + idCard + "/kudos/" + idKudo] = true;
             refControl.update(updates);
           } else {
-            firebase.database().ref(this.activeEvent +'/users').child(this.userEmail).child(idCard).child('kudos').child(idKudo).remove();
+            firebase.database().ref(this.activeEvent +'/users').child(this.userEmail).child("/feedback/"+idBlock).child(idCard).child('kudos').child(idKudo).remove();
           }
         },
-        rankear:function(e) {
+        _putStars:function(e) {
           var data = e.model['__data__'];
           var idCard = data.card.id;
+          var idBlock = data.card.block;
           var ratingCard = this.$$('#star_' + idCard).rate;
-          var ref = firebase.database().ref(this.activeEvent + "/users/" + this.userEmail  );
+          var ref = firebase.database().ref(this.activeEvent + "/users/" + this.userEmail+"/feedback");
           var updates = {};
-          updates["/" + idCard + "/rating"] = ratingCard;
+          updates["/" + idBlock + "/" + idCard + "/rating"] = ratingCard;
           ref.update(updates);
         }
       });

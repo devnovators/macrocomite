@@ -174,7 +174,7 @@
           for (var card in users[user]) {
             var vote = users[user][card];
             for (var prop in vote) {
-              if (prop == 'comments') {
+              if (prop == 'comment') {
                 for (var commentProps in users[user][card][prop]) {
                   if (commentProps == 'message') {
                     var message = users[user][card][prop][commentProps];
