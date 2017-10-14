@@ -221,9 +221,13 @@
           var idBlock = data.card.block;
           var ratingCard = this.$$('#star_' + idCard).rate;
           var ref = firebase.database().ref(this.activeEvent + "/users/" + this.userEmail+"/feedback");
-          var updates = {};
-          updates["/" + idBlock + "/" + idCard + "/rating"] = ratingCard;
-          ref.update(updates);
+          if (ratingCard>0){
+            var updates = {};
+            updates["/" + idBlock + "/" + idCard + "/rating"] = ratingCard;
+            ref.update(updates);
+          }else{
+            firebase.database().ref(this.activeEvent +'/users').child(this.userEmail).child("/feedback/"+idBlock).child(idCard).child('rating').remove();
+          }
         }
       });
     </script>

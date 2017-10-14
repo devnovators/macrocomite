@@ -150,7 +150,10 @@
                             parent.$.about.getMember();
                             firebase.database().ref(activeEvent).once("value").then(function(snapshot) {
                                 parent.set('eventName', snapshot.val().parameters.name); 
-                                if (snapshot.val().parameters.withKudos=='true'){parent.$.cards.withKudos=true;}
+                                if (snapshot.val().parameters.withKudos=='true'){
+                                    parent.$.cards.withKudos=true;
+                                    parent.$.stats.withKudos=true;
+                                }
                                 parent.$.cards.numStars=snapshot.val().parameters.numStars;
                                 parent.$.cards.getKudos();
                                 parent.$.cards.getBlocks();
