@@ -28,8 +28,14 @@
                   <div class="rate-name">
                     <div class="div_middle">
                       <div><b>Descripción:</b> {{card.description}}</div>
+                      <template is="dom-if" if="{{card.sdacode}}">
+                        <div><b>SDACODE:</b> {{card.sdacode}}</div>
+                      </template>
                       <template is="dom-if" if="{{card.kpi}}">
                         <div><b>KPI:</b> {{card.kpi}}</div>
+                      </template>
+                      <template is="dom-if" if="{{card.kpi}}">
+                        <div><b>MVP:</b> {{card.mvp}}</div>
                       </template>
                       <div><a href="[[card.linkValue]]" target="_blank">[[card.linkLabel]]</a></div>
                     </div>
@@ -126,7 +132,8 @@
           for (var card in block.cards) {
             var newCard = { id:card, title:block.cards[card].title, description:block.cards[card].description,
               leader:block.cards[card].leader, color:block.cards[card].color, withChat:block.cards[card].withChat, 
-              linkLabel:block.cards[card].linkLabel, linkValue:block.cards[card].linkValue, kpi:block.cards[card].kpi};
+              linkLabel:block.cards[card].linkLabel, linkValue:block.cards[card].linkValue, kpi:block.cards[card].kpi, 
+              sdacode: block.cards[card].sdacode, mvp: block.cards[card].mvp};
             //parameters
             newCard.objetivo        =block.cards[card].parameters.objetivo;
             newCard.detalles        =block.cards[card].parameters.detalles;
