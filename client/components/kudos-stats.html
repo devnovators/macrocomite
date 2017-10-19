@@ -72,13 +72,15 @@
                 <div>{{statKudo}}</div>
               </template>
             </template>
-            <div><span><b>Feedback</b></span>
-              <div id="fb_{{card.id}}">
-                <template is="dom-repeat" items="{{_getComments(card.comments)}}" as="comment">
-                {{comment}}
-                </template>
+            <template is="dom-if" if="{{withFeedback}}">
+              <div><span><b>Feedback</b></span>
+                <div id="fb_{{card.id}}">
+                  <template is="dom-repeat" items="{{_getComments(card.comments)}}" as="comment">
+                  {{comment}}
+                  </template>
+                </div>
               </div>
-            </div>
+            </template>
           </div>
         </iron-collapse>
       </template>
@@ -98,7 +100,8 @@
       selected      : { value: 0 },
       display       : { value: "block" },
       sortedCards   : { type: Array, notify:true },
-      withKudos       : {type:Boolean, value:false, notify:true},
+      withKudos     : {type:Boolean, value:false, notify:true},
+      withFeedback  : {type:Boolean, value:false, notify:true},
       arrComments   : { type: Array, notify:true},
     },
     getCards:function(){

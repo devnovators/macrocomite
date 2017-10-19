@@ -34,9 +34,11 @@
                       <paper-button class="rate-icon bot" id="{{card.id}}" data='{{card}}' on-click="openBot" style$="display:[[card.withChat]]">
                         Chatbot<iron-icon icon="communication:live-help" data='{{card}}'></iron-icon>
                       </paper-button>
-                      <paper-button class="rate-icon feeback" id="{{card.id}}" data='{{card}}' on-click="openModal">
-                        Feedback <iron-icon icon="announcement" data='{{card}}'></iron-icon>
-                      </paper-button>
+                      <template is="dom-if" if="{{withFeedback}}">
+                        <paper-button class="rate-icon feeback" id="{{card.id}}" data='{{card}}' on-click="openModal">
+                          Feedback <iron-icon icon="announcement" data='{{card}}'></iron-icon>
+                        </paper-button>
+                      </template>
                     </div>
                   </div>
                 </div>
@@ -86,6 +88,7 @@
           blocks          : {type:Array, notify:true},
           kudos           : {type:Array, notify:true},
           withKudos       : {type:Boolean, value:false, notify:true},
+          withFeedback    : {type:Boolean, value:false, notify:true},
           numStars        : {type:Number, notify:true},
         },
         unCollapse: function(e) {
@@ -119,7 +122,8 @@
           self = this;
           for (var card in block.cards) {
             var newCard = { id:card, title:block.cards[card].title, description:block.cards[card].description,
-              leader:block.cards[card].leader, color:block.cards[card].color, withChat:block.cards[card].withChat, linkLabel:block.cards[card].linkLabel, linkValue:block.cards[card].linkValue };
+              leader:block.cards[card].leader, color:block.cards[card].color, withChat:block.cards[card].withChat, 
+              linkLabel:block.cards[card].linkLabel, linkValue:block.cards[card].linkValue, kpi:block.cards[card].kpi};
             //parameters
             newCard.objetivo        =block.cards[card].parameters.objetivo;
             newCard.detalles        =block.cards[card].parameters.detalles;

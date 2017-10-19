@@ -154,6 +154,10 @@
                                     parent.$.cards.withKudos=true;
                                     parent.$.stats.withKudos=true;
                                 }
+                                if (snapshot.val().parameters.withFeedback=='true'){
+                                    parent.$.cards.withFeedback=true;
+                                    parent.$.stats.withFeedback=true;
+                                }
                                 parent.$.cards.numStars=snapshot.val().parameters.numStars;
                                 parent.$.cards.getKudos();
                                 parent.$.cards.getBlocks();
