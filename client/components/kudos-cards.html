@@ -27,8 +27,10 @@
                   </div>
                   <div class="rate-name">
                     <div class="div_middle">
-                      <div>Descripción: {{card.description}}</div>
-                      <div>KPI: {{card.kpi}}</div>
+                      <div><b>Descripción:</b> {{card.description}}</div>
+                      <template is="dom-if" if="{{card.kpi}}">
+                        <div><b>KPI:</b> {{card.kpi}}</div>
+                      </template>
                       <div><a href="[[card.linkValue]]" target="_blank">[[card.linkLabel]]</a></div>
                     </div>
                     <div class="div_feedback">
