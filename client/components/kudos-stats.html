@@ -72,7 +72,13 @@
                 <div>{{statKudo}}</div>
               </template>
             </template>
-            <div><span><b>Feedback</b></span><div id="fb_{{card.id}}">{{card.comments}}</div></div>
+            <div><span><b>Feedback</b></span>
+              <div id="fb_{{card.id}}">
+                <template is="dom-repeat" items="{{_getComments(card.comments)}}" as="comment">
+                {{comment}}
+                </template>
+              </div>
+            </div>
           </div>
         </iron-collapse>
       </template>
@@ -93,6 +99,7 @@
       display       : { value: "block" },
       sortedCards   : { type: Array, notify:true },
       withKudos       : {type:Boolean, value:false, notify:true},
+      arrComments   : { type: Array, notify:true},
     },
     getCards:function(){
       var ref = firebase.database().ref(this.activeEvent + "/blocks");
@@ -118,19 +125,22 @@
                 card.averageRating=Number(card.totalRating) / Number(card.usersRating);
               }
             }
-            card.statKudos={}
-            if(block.cards[idCard].statKudos != undefined){
-              //console.info(block.cards[idCard].statKudos);
-              //card.statKudos= block.cards[idCard].statKudos;
-              for(var stat in block.cards[idCard].statKudos){
-                console.info('BLOQUE : ' + block.cards[idCard].statKudos[stat]);
-              }
-            }
-            if(block.cards[idCard].comments == undefined){
-              card.comments={};
-            }else{
-              card.comments=block.cards[idCard].comments;
-            }
+            // card.statKudos={}
+            
+            // if(block.cards[idCard].statKudos != undefined){
+            //   console.info(block.cards[idCard].statKudos);
+            //   //card.statKudos= block.cards[idCard].statKudos;
+            //   for(var stat in block.cards[idCard].statKudos){
+            //     console.info('BLOQUE : ' + block.cards[idCard].statKudos[stat]);
+            //   }
+            // }
+            
+            //console.info(card.comments);
+            // if(card.comments == undefined){
+            //   card.comments={};
+            // }else{
+            //   card.comments=block.cards[idCard].comments;
+            // }
             self.push('cards', card);
           }
           self.sortedCards = self.cards;
@@ -139,6 +149,16 @@
           
         });
       });
+    },
+    _getComments:function(comments){
+      if (comments!=undefined){
+        this.arrComments=[];
+        for (var comment in comments) {
+          console.info(comments[comment].message);
+          this.push("arrComments",comments[comment].message);
+        }
+        return this.arrComments;
+      }
     },
     getRanking:function() {
       var self=this;
@@ -157,7 +177,7 @@
           var numStars=0;
           //console.log('user: ' + user);
           for (var block in users[user].feedback) {
-            console.info('block: ' + block);
+            //console.info('block: ' + block);
             for(var card in users[user].feedback[block]){
               var vote = users[user].feedback[block][card];
               for (var prop in vote) {
