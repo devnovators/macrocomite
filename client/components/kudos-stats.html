@@ -100,7 +100,6 @@
       self.cards = [];
       ref.on('value',function(snapshot) {
         snapshot.forEach(function(child) {
-          console.info('CHROME');
           var block = child.val();
           for (var idCard in block.cards) {
             var card        = {};
