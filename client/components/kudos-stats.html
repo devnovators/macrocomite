@@ -58,7 +58,7 @@
         <h3>Revisa cada proyecto (click)</h3>
       </div>
       <template is="dom-repeat" items="{{cards}}" as="card">
-        <div class="heading" on-click="toggleRanking" data="{{card.id}}" style="background:{{card.color}}">
+        <div class="heading" on-click="toggleRanking" data="{{card.id}}" style$="background:{{card.color}}">
           {{card.titleBlock}} &gt; {{card.title}}
         </div>
         <iron-collapse id="cl_{{card.id}}">
