@@ -108,7 +108,7 @@
       var ref = firebase.database().ref(this.activeEvent + "/blocks");
       var self = this;
       self.cards = [];
-      ref.on('value',function(snapshot) {
+      ref.once('value',function(snapshot) {
         snapshot.forEach(function(child) {
           var block = child.val();
           for (var idCard in block.cards) {
