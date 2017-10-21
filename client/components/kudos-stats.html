@@ -29,7 +29,7 @@
     </div>
 
     <div class="resultFeedback">
-      <h3>Ranking por Feedback</h3>
+      <h3>Ranking por Votación</h3>
       <span id="numUsers">(Número de usuarios: {{numUsers}})</span>
       <template is="dom-repeat" items="{{users}}" as="user">
         <div>
@@ -214,9 +214,10 @@
           self.push('users',_user);
         }
         self.numUsers=numUsers;
+        // self.users.sort(function(a,b) {
+        //   return (a.numFeedback > b.numFeedback) ? -1 : ((b.numFeedback > a.numFeedback) ? 1 : 0);} );
         self.users.sort(function(a,b) {
-          return (a.numFeedback > b.numFeedback) ? -1 : ((b.numFeedback > a.numFeedback) ? 1 : 0);} );
-          
+          return (a.numStars > b.numStars) ? -1 : ((b.numStars > a.numStars) ? 1 : 0);} );
       });
 
     },
