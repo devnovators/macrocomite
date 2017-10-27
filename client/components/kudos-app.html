@@ -141,7 +141,8 @@
                         parent.set('userPicture', account.photoURL);
                         parent.set('logged', true);
                         firebase.database().ref("activeEvent").once("value").then(function(snapshot) {
-                            var activeEvent = 'events/' + snapshot.val(); //console.log('activo:'+activo);
+                            //var activeEvent = 'events/' + snapshot.val(); //console.log('activo:'+activo);
+                            var activeEvent = 'events/' + 'PI6G';
                             parent.set('activeEvent', activeEvent); //console.log('parent.activeEvent:', parent.activeEvent);
                             parent.$.cards.activeEvent = activeEvent;
                             parent.$.stats.activeEvent = activeEvent;
