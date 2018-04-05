@@ -53,19 +53,22 @@
                   </div>
                 </div>
                 <div class="card-actions kudos-button">
-                  <template is="dom-if" if="{{withKudos}}">
-                    <template id="tmtKudo" is="dom-repeat" items="{{kudos}}" as="kudo">
-                      {{getKudosUser(card.block,card.id,kudo.id)}}
-                      <paper-button class$="kudo [[kudo.id]]" toggles  id="id_{{card.id}}_{{kudo.id}}" on-click="_assess">
-                        <iron-icon icon="{{kudo.icon}}"></iron-icon> {{kudo.title}}
-                      </paper-button>
-                      <paper-tooltip for="id_{{card.id}}_{{kudo.id}}" position="top" style="max-width:100px;">{{kudo.title}}<br>{{kudo.description}}</paper-tooltip>
-                    </template>
-                  </template>
                   <div class="valoracion-star">
                     <star-rating stars="{{numStars}}" id="star_{{card.id}}" on-click="_putStars"></star-rating>
                     {{getRatingCardUser(card.block,card.id)}}
                   </div>
+                  <template is="dom-if" if="{{withKudos}}">
+                    <template id="tmtKudo" is="dom-repeat" items="{{kudos}}" as="kudo">
+                      {{getKudosUser(card.block,card.id,kudo.id)}}
+                      <!--<paper-button class$="kudo [[kudo.id]]" toggles  id="id_{{card.id}}_{{kudo.id}}" on-click="_assess">
+                        <iron-icon icon="{{kudo.icon}}"></iron-icon> {{kudo.title}}
+                      </paper-button>
+                      -->
+                      <div class$="kudo_base kudo_disable [[kudo.id]]" id="id_img_{{card.id}}_{{kudo.id}}" on-click="_assess" data='{{card}}' dataKudo='{{kudo.id}}'>&nbsp;</div>
+                      
+                      <paper-tooltip for="id_img_{{card.id}}_{{kudo.id}}" position="top" style="max-width:100px;">{{kudo.description}}</paper-tooltip>
+                    </template>
+                  </template>
                 </div>
               </div>
             </paper-card>
@@ -212,22 +215,29 @@
           });
         },
         _assess:function(e) {
-          var kudoSeleccionado = e.model['__data__'];
-          var idKudo = kudoSeleccionado.kudo.id;
-          var idCard = kudoSeleccionado.card.id;
-          var idBlock = kudoSeleccionado.card.block;
-          var idBtnKudo=this.$$('#id_' +idCard +'_' +idKudo);
-          var voto = 1;
-          if (!idBtnKudo.active){ //botón inactivo
-            voto = -1;
-          }
-          var refControl = firebase.database().ref(this.activeEvent +'/users').child(this.userEmail+"/feedback");
-          if(voto > 0) {
+          var kudoSeleccionado = Polymer.dom(e).localTarget;
+          var _card = kudoSeleccionado.data;
+          console.info(kudoSeleccionado.dataKudo);
+          var idKudo = kudoSeleccionado.dataKudo;
+          var idCard  = _card.id;
+          var idBlock = _card.block;
+          var idBtnKudo=this.$$('#id_img_' +idCard +'_' +idKudo);
+          
+          
+          var refControl = firebase.database().ref(this.activeEvent +'/users').child(this.userEmail+"/kudos");
+          var refCard=firebase.database().ref(this.activeEvent +'/blocks/'+  idBlock + '/cards/' + idCard +'/voters');
+          if(idBtnKudo.classList.toggle('cup_enable')) {
+            idBtnKudo.classList.remove("cup_disable");
             var updates = {};
-            updates["/" + idBlock + "/" + idCard + "/kudos/" + idKudo] = true;
+            var updatesVotersbyKudo ={};
+            updates["/" + idBlock + "/" + idCard + "/" + idKudo] = true;
+            updatesVotersbyKudo["/" + idKudo + "/" + this.userEmail]=true;
             refControl.update(updates);
+            refCard.update(updatesVotersbyKudo);
           } else {
-            firebase.database().ref(this.activeEvent +'/users').child(this.userEmail).child("/feedback/"+idBlock).child(idCard).child('kudos').child(idKudo).remove();
+            idBtnKudo.classList.add('cup_disable');
+            firebase.database().ref(this.activeEvent +'/users').child(this.userEmail).child("/kudos/"+idBlock).child(idCard).child(idKudo).remove();
+            firebase.database().ref(this.activeEvent + '/blocks/' + idBlock + '/cards/'+ idCard +'/voters/' + idKudo + '/'+ this.userEmail).remove();
           }
         },
         _putStars:function(e) {

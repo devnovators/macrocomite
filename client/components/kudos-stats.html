@@ -9,7 +9,6 @@
   <paper-tabs selected="{{selected}}">
     <paper-tab>Valoraciones</paper-tab>
     <paper-tab>Agradecimientos</paper-tab>
-    <paper-tab>Feedback</paper-tab>
   </paper-tabs>
 
   <iron-pages selected="{{selected}}">
@@ -47,42 +46,6 @@
             </div>
           </div>
         </div>
-      </template>
-    </div>
-
-    <div class="resultFeedback">
-      <div>
-        <paper-button id="btnReload" toggles on-click="reloadFeedback" class="reload">
-          <iron-icon icon="icons:autorenew"></iron-icon> Reload  
-        </paper-button>
-        <h3>Revisa cada proyecto (click)</h3>
-      </div>
-      <template is="dom-repeat" items="{{cards}}" as="card">
-        <div class="heading" on-click="toggleRanking" data="{{card.id}}" style$="background:{{card.color}}">
-          {{card.titleBlock}} &gt; {{card.title}}
-        </div>
-        <iron-collapse id="cl_{{card.id}}">
-          <div class="content">
-            <div id="st_{{card.id}}">
-              <div><div class="userSection" style="vertical-align:top;"><b>Valoración</b> </div><div class="userSection2"> {{card.totalRating}} stars / {{card.usersRating}} users = {{card.averageRating}} </div></div>
-            </div>
-            <template is="dom-if" if="{{withKudos}}">
-              <div><span><b>Kudos</b></span></div>
-              <template is="dom-repeat" items="{{cards.statKudos}}" as="statKudo">
-                <div>{{statKudo}}</div>
-              </template>
-            </template>
-            <template is="dom-if" if="{{withFeedback}}">
-              <div><span><b>Feedback</b></span>
-                <div id="fb_{{card.id}}">
-                  <template is="dom-repeat" items="{{_getComments(card.comments)}}" as="comment">
-                  {{comment}}
-                  </template>
-                </div>
-              </div>
-            </template>
-          </div>
-        </iron-collapse>
       </template>
     </div>
     
