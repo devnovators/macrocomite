@@ -14,7 +14,7 @@
       <paper-card style="width:95%">
         <div>
           <div class$="rate-header titleProject PGMINI {{block.id}}" style$="height:40px;" on-click="unCollapse" data-args$="[[block.id]]">&gt; 
-          <span class="titleBlock">{{block.title}}</span>
+          <span class="titleBlock" data-args$="[[block.id]]">{{block.title}}</span>
           <!--<paper-icon-button icon="icons:arrow-drop-down" style="float:right;"></paper-icon-button></div>-->
         </div>
         <iron-collapse id="clp_[[block.id]]" style="width:100%;">
