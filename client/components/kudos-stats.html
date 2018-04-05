@@ -188,6 +188,17 @@
           self.sortedRating.sort(function(a,b) {
             return (a.averageRating > b.averageRating) ? -1 : ((b.averageRating > a.averageRating) ? 1 : 0);} );
           
+          self.sortedCustomer = self.cards;
+          self.sortedCustomer.sort(function(a,b) {
+            return (a.kudoCustomer > b.kudoCustomer) ? -1 : ((b.kudoCustomer > a.kudoCustomer) ? 1 : 0);} );
+          
+          self.sortedThink = self.cards;
+          self.sortedThink.sort(function(a,b) {
+            return (a.kudoThink > b.kudoThink) ? -1 : ((b.kudoThink > a.kudoThink) ? 1 : 0);} );
+        
+          self.sortedTeam = self.cards;
+          self.sortedTeam.sort(function(a,b) {
+            return (a.kudoTeam > b.kudoTeam) ? -1 : ((b.kudoTeam > a.kudoTeam) ? 1 : 0);} );
         });
       });
     },
