@@ -163,6 +163,9 @@
                                 parent.$.cards.numStars=snapshot.val().parameters.numStars;
                                 parent.$.cards.getKudos();
                                 parent.$.cards.getBlocks();
+                                
+                                parent.$.stats.membersJury=snapshot.val().parameters.membersJury;
+                                parent.$.stats.factorJury=snapshot.val().parameters.factorJury;
                                 parent.showCards();
                             });
                             var updates = {};
