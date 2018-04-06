@@ -187,11 +187,16 @@
               var votersRating = block.cards[idCard]['rating'];
               for (var voter in votersRating) {
                   var lista=self.membersJury.toString().replace(/[@.]/g,'_');;
-                  var n = lista.indexOf(voter);
-                  console.info('Rating: ' + voter + ' ==> '+ block.cards[idCard]['rating'][voter]);
-                  console.info(n);
-                  _publicVote =_publicVote+block.cards[idCard]['rating'][voter];
-                  _juryVote   =0;
+                  var tipo = lista.indexOf(voter);
+                  
+                  if(tipo<0){
+                    _publicVote =_publicVote  + block.cards[idCard]['rating'][voter];  
+                    console.info('Rating-public: ' + voter + ' ==> '+ block.cards[idCard]['rating'][voter]);
+                  }else{
+                    _juryVote   =_juryVote    + block.cards[idCard]['rating'][voter];
+                    console.info('Rating-jurado: ' + voter + ' ==> '+ block.cards[idCard]['rating'][voter]);
+                  }
+                  
                   contador++;  
               }
               
@@ -281,10 +286,10 @@
           self.push('users',_user);
         }
         self.numUsers=numUsers;
-        // self.users.sort(function(a,b) {
-        //   return (a.numFeedback > b.numFeedback) ? -1 : ((b.numFeedback > a.numFeedback) ? 1 : 0);} );
         self.users.sort(function(a,b) {
-          return (a.numStars > b.numStars) ? -1 : ((b.numStars > a.numStars) ? 1 : 0);} );
+           return (a.numFeedback > b.numFeedback) ? -1 : ((b.numFeedback > a.numFeedback) ? 1 : 0);} );
+        //self.users.sort(function(a,b) {
+        //  return (a.numStars > b.numStars) ? -1 : ((b.numStars > a.numStars) ? 1 : 0);} );
       });
 
     },
