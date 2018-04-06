@@ -28,7 +28,8 @@
               {{sortCard.averageRating}}  
             </div>
             
-            <div style="vertical-align:middle;display:inline-block;width:70%;padding-left:10px;"> &gt; {{sortCard.title}}</div>
+            <div style="vertical-align:middle;display:inline-block;width:60%;padding-left:10px;"> &gt; {{sortCard.title}}</div>
+            <div style="vertical-align:middle;display:inline-block;width:10%;padding-left:10px;">Ver más</div>
           </div>
         </template>
       </paper-card>
@@ -114,8 +115,19 @@
         </div>
       </template>
     </div>
-    
   </iron-pages>
+    <paper-dialog id="commentDialog">
+      <h2 id="commentDialogTitle">Comments</h2>
+      <paper-dialog-scrollable>
+        <ul>
+          <div id="comments" style="text-align: left;"></div>  
+        </ul>
+        
+      </paper-dialog-scrollable>
+      <div class="buttons">
+        <paper-button dialog-confirm autofocus>OK</paper-button>
+      </div>
+    </paper-dialog>
 </template>
 <script>
  Polymer({
