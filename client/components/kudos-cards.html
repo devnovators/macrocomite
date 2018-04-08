@@ -7,15 +7,15 @@
     <!-- Bienvenida -->
     <div style="display:table">
       <img id="imgProfile" class="avatar" src="{{userPicture}}">
-      <div style="display:table-cell;vertical-align:middle"> ¡Bienvenid@ {{userFirstName}}!</div>
+      <div style="display:table-cell;vertical-align:middle"> ¡Bienvenido | добро пожаловать <span style="color:#448081;">{{userFirstName}}</span>!</div>
     </div>
     <!-- Lista de Bloques -->
     <template id="arrBlocks" is="dom-repeat" items="{{blocks}}" as="block">
       <paper-card style="width:95%">
         <div>
-          <div class$="rate-header titleProject PGMINI {{block.id}}" style$="height:40px;" on-click="unCollapse" data-args$="[[block.id]]">&gt; 
-          <span class="titleBlock" data-args$="[[block.id]]">{{block.title}}</span>
-          <!--<paper-icon-button icon="icons:arrow-drop-down" style="float:right;"></paper-icon-button></div>-->
+          <div class$="rate-header titleProject PGMINI {{block.id}}" style$="height:40px;" on-click="unCollapse" data-args$="[[block.id]]">
+            &gt;<span class="titleBlock" data-args$="[[block.id]]">{{block.title}}</span>
+          </div>
         </div>
         <iron-collapse id="clp_[[block.id]]" style="width:100%;">
           <!-- Lista de Tarjetas x Bloque -->
@@ -60,12 +60,7 @@
                   <template is="dom-if" if="{{withKudos}}">
                     <template id="tmtKudo" is="dom-repeat" items="{{kudos}}" as="kudo">
                       {{getKudosUser(card.block,card.id,kudo.id)}}
-                      <!--<paper-button class$="kudo [[kudo.id]]" toggles  id="id_{{card.id}}_{{kudo.id}}" on-click="_assess">
-                        <iron-icon icon="{{kudo.icon}}"></iron-icon> {{kudo.title}}
-                      </paper-button>
-                      -->
                       <div class$="kudo_base [[kudo.id]]" id="id_img_{{card.id}}_{{kudo.id}}" on-click="_assess" data='{{card}}' dataKudo='{{kudo.id}}'>&nbsp;</div>
-                      
                       <paper-tooltip for="id_img_{{card.id}}_{{kudo.id}}" position="top" style="max-width:100px;">{{kudo.description}}</paper-tooltip>
                     </template>
                   </template>
@@ -220,7 +215,6 @@
         _assess:function(e) {
           var kudoSeleccionado = Polymer.dom(e).localTarget;
           var _card = kudoSeleccionado.data;
-          console.info(kudoSeleccionado.datakudo);
           var idKudo = kudoSeleccionado.datakudo;
           var idCard  = _card.id;
           var idBlock = _card.block;
