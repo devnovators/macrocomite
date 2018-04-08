@@ -213,7 +213,9 @@
             var _kudoTeam   = 0;
             var _publicVote = 0;
             var _juryVote   = 0;
-            
+            card.averageRating =0;
+            card.usersRating =0;
+            card.orderRating=0;
             if (block.cards[idCard]['voters'] != undefined ){
                 var vote = block.cards[idCard]['voters'];
                 for (var prop in vote) {
@@ -229,10 +231,7 @@
                 }
             }
             
-            if (block.cards[idCard]['rating'] == undefined){
-              card.averageRating =0;
-              card.usersRating =0;
-            }else{
+            if (block.cards[idCard]['rating'] != undefined){
               var votersRating = block.cards[idCard]['rating'];
               for (var voter in votersRating) {
                   var lista=self.membersJury.toString().replace(/[@.]/g,'_');;
@@ -251,18 +250,24 @@
             if(card.comments){
               card.withFeedback=true;
             }
+            let _average=0.0;
             card.usersRating =contador;
             card.averagePublic=_publicVote*0.5;
             card.averageJury=_juryVote*0.5;
-            card.averageRating=_publicVote*0.5 + _juryVote*0.5;
-            card.orderRating  = parseInt(card.averageRating*100,10);
+            
+            _average=_publicVote*0.5 + _juryVote*0.5;
+            card.averageRating=_average.toFixed(2);
+            card.orderRating  = parseInt(_average.toFixed(2)*100.00,10);
+            console.info(card.orderRating);
             card.kudoCustomer=_kudoCustomer;
             card.kudoThink   =_kudoThink;
             card.kudoTeam    =_kudoTeam;
             self.push('cards', card);
           }
+          
+          
           self.sortedRating = self.cards;
-          self.sortedRating.sort(self.compareValues('averageRating','desc'));
+          self.sortedRating.sort(self.compareValues('orderRating','desc'));
           
           self.sortedCustomer = self.cards;
           self.sortedCustomer.sort(self.compareValues('kudoCustomer','desc'));
@@ -303,7 +308,6 @@
       var cardChosen = Polymer.dom(e).localTarget;
       var lista="";
       if(cardChosen.data){
-        console.log(cardChosen.data);
         lista="<ul>";
         var comentarios=cardChosen.data.comments;
         for (var comment in comentarios){
