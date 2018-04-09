@@ -218,7 +218,8 @@
             card.usersRating    = 0;
             card.orderRating    = 0;
             
-            var contador        = 0;
+            var _contadorJury   = 0;
+            var _contadorPublic = 0;
             var _kudoCustomer   = 0;
             var _kudoThink      = 0;
             var _kudoTeam       = 0;
@@ -250,10 +251,11 @@
                 
                 if(tipo<0){
                   _publicVote =_publicVote  + block.cards[idCard]['rating'][voter];  
+                  _contadorPublic++;
                 }else{
                   _juryVote   =_juryVote    + block.cards[idCard]['rating'][voter];
+                  _contadorJury++;
                 }
-                contador++;  
               }
             }
             
@@ -262,11 +264,19 @@
               card.withFeedback=true;
             }
             let _average=0.0;
-            card.usersRating =contador;
-            card.averagePublic=_publicVote*0.5;
-            card.averageJury=_juryVote*0.5;
+            let _averageJury=0.0;
+            let _averagePublic=0.0;
+            card.usersRating =_contadorJury+_contadorPublic;
             
-            _average=_publicVote*0.5 + _juryVote*0.5;
+            _averageJury    =(_publicVote/_contadorPublic)*0.5;
+            _averagePublic  =(_juryVote/_contadorJury)*0.5;
+            
+            card.averagePublic=_averageJury.toFixed(2);
+            card.averageJury=_averagePublic.toFixed(2);
+            if(_contadorJury==0){_contadorJury=1;}
+            if(_contadorPublic==0){_contadorPublic=1;}
+            
+            _average=(_publicVote/_contadorPublic)*0.5 + (_juryVote/_contadorJury)*0.5;
             card.averageRating=_average.toFixed(2);
             card.orderRating  = parseInt(_average.toFixed(2)*100.00,10);
             card.kudoCustomer=_kudoCustomer;
