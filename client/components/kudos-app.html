@@ -133,14 +133,21 @@
                     if (account) {
                         parent.set('user', account);
                         parent.set('userEmail', account.email);
-                        parent.$.cards.userFirstName = account.displayName.split(' ')[0];
+                        if(account.displayName){
+                            parent.$.cards.userFirstName    = account.displayName.split(' ')[0];    
+                            parent.$.cards.userName         = account.displayName;
+                            parent.$.chatbot.userFirstName  = account.displayName.split(' ')[0];
+                        }else{
+                            parent.$.cards.userFirstName    = account.email;
+                            parent.$.cards.userName         = account.email.toString().replace(/[@.]/g,'_');
+                            parent.$.chatbot.userFirstName  = account.email;
+                        }
+                        parent.$.chatbot.userEmail      = account.email.toString().replace(/[@.]/g,'_');
                         parent.$.cards.userEmail = account.email.toString().replace(/[@.]/g,'_');
                         parent.$.cards.userPicture = account.photoURL || '../images/avatar_login.png';
-                        parent.$.cards.userName = account.displayName;
-                        parent.$.chatbot.userFirstName = account.displayName.split(' ')[0];
-                        parent.$.chatbot.userEmail = account.email.toString().replace(/[@.]/g,'_');
-                        parent.set('userName', account.displayName);
-                        parent.set('userPicture', account.photoURL);
+                        
+                        parent.set('userName', parent.$.cards.userName);
+                        parent.set('userPicture', parent.$.cards.userPicture);
                         parent.set('logged', true);
                         firebase.database().ref("activeEvent").once("value").then(function(snapshot) {
                             var activeEvent = 'events/' + snapshot.val(); //console.log('activo:'+activo);
