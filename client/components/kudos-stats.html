@@ -268,11 +268,21 @@
             let _averagePublic=0.0;
             card.usersRating =_contadorJury+_contadorPublic;
             
-            _averageJury    =(_publicVote/_contadorPublic)*0.5;
-            _averagePublic  =(_juryVote/_contadorJury)*0.5;
+            _averageJury    =(_juryVote/_contadorJury)*0.5;
+            _averagePublic  =(_publicVote/_contadorPublic)*0.5;
+
+            if(isNaN(_averageJury)){
+              card.averageJury    =0;
+            }else{
+              card.averageJury    =_averageJury.toFixed(2);
+            }            
             
-            card.averagePublic=_averageJury.toFixed(2);
-            card.averageJury=_averagePublic.toFixed(2);
+            if(isNaN(_averagePublic)){
+              card.averagePublic  =0;
+            }else{
+              card.averagePublic  =_averagePublic.toFixed(2);
+            }
+            
             if(_contadorJury==0){_contadorJury=1;}
             if(_contadorPublic==0){_contadorPublic=1;}
             
