@@ -58,7 +58,7 @@
                 </div>
                 <div class="display_inline" style="vertical-align:middle;width:55%;text-align: left;padding-left:5px;"> 
                   {{sortCard.title}}<br>
-                  <template is="dom-if" if="{{sortCard.withFeedback}}">
+                  <template is="dom-if" if="{{withFeedback}}">
                     <paper-button class="rate-icon feeback" id="star_{{sortCard.id}}" data='{{sortCard}}' on-click="getComments">
                       Ver comentarios <iron-icon icon="announcement" data='{{sortCard}}'></iron-icon>
                     </paper-button>
