@@ -18,9 +18,9 @@
       <!--</paper-button>-->
       <paper-card class="paper_card_summary">
         <div class="rate-header titleProject title_summary_div" on-click="unCollapse" data-selector="#blockRating">
-            <div class="display_inline"><img style="width:50%" src="../images/copa.png" data-selector="#blockRating"></div>
+            <div class="display_inline"><img src="../images/aplauso.png" data-selector="#blockRating"></div>
             <div class="display_inline title_summary" data-selector="#blockRating">
-              &gt; Ranking general por estrellas
+              &gt; Reconocimiento por estrellas
             </div>
         </div>
         <iron-collapse id="blockRating" style="width:100%;">
@@ -139,14 +139,13 @@
     </div>
 
     <div class="resultFeedback">
-      <h3>Ranking por Votación</h3>
       <span id="numUsers">(Número de usuarios: {{numUsers}})</span>
       <template is="dom-repeat" items="{{users}}" as="user">
         <div>
           <div class="personItem" tabindex$="[[tabIndex]]">
             <iron-image class="avatar" sizing="contain" src="[[user.picture]]"></iron-image>
             <div class="pad">
-              <div class="primary">[[user.name]]</div>
+              <div><b>[[user.name]]</b></div>
               <address>
                 <div class="userSection">Feedbacks: [[user.numFeedback]]</div>
                 <template is="dom-if" if="{{withKudos}}">
